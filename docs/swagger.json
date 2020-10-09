@@ -3,10 +3,10 @@
     "info": {
         "description": "Delivery service API",
         "title": "Delivery service",
-        "termsOfService": "https://www.andrey.com",
+        "termsOfService": "https://www.andrey-derma.com",
         "contact": {
             "name": "API Support",
-            "url": "https://www.andrey.com",
+            "url": "https://www.andrey-derma.com",
             "email": "andrey.derma@gmail.com"
         },
         "license": {},

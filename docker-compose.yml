@@ -27,7 +27,7 @@ services:
     - DATABASE_NAME=delivery_app
     - APP_PORT=:8080
     - ENV=dev
-    - MAP_API_KEY=GMAP_API
+    - MAP_API_KEY=${GMAP_API}
     ports:
     - 8080:8080
     tty: true

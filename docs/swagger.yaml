@@ -43,10 +43,10 @@ info:
   contact:
     email: andrey.derma@gmail.com
     name: API Support
-    url: https://www.andrey.com
+    url: https://www.andrey-derma.com
   description: Delivery service API
   license: {}
-  termsOfService: https://www.andrey.com
+  termsOfService: https://www.andrey-derma.com
   title: Delivery service
   version: "1.0"
 paths:

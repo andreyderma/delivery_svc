@@ -14,6 +14,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"googlemaps.github.io/maps"
 	"log"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -62,6 +63,12 @@ func (p *DeliveryService) TakeOrder(dtoTakeOrder dto.TakeOrder, id int) (resps d
 	return resps, nil
 }
 
+func ValidateLatLong(l []string) bool {
+	matchedLatitude, _ := regexp.MatchString(config.LatitudeRegexString, l[0])
+	matchedLongitude, _ := regexp.MatchString(config.LongitudeRegexString, l[1])
+	return matchedLongitude && matchedLatitude
+}
+
 func (p *DeliveryService) CreateOrder(dtoDeliveryRequest dto.DeliveryRequest) (resps dto.DeliveryResponse, errRender render.Renderer) {
 	errMessageVal, errValidation := utils.CustomValidator{
 		CustomV: validator.New(),
@@ -80,8 +87,16 @@ func (p *DeliveryService) CreateOrder(dtoDeliveryRequest dto.DeliveryRequest) (r
 	origin := []string{strings.Join(dtoDeliveryRequest.Origin, ",")}
 	dest := []string{strings.Join(dtoDeliveryRequest.Destination, ",")}
 
-	if len(dtoDeliveryRequest.Destination) != 2 && len(dtoDeliveryRequest.Origin) != 2 {
-		return resps, utils.ErrInvalidRequest(errors.New("Array of destination should contains 2 elements"), utils.INVALID_REQUEST)
+	if len(dtoDeliveryRequest.Destination) != 2 || len(dtoDeliveryRequest.Origin) != 2 {
+		return resps, utils.ErrInvalidRequest(errors.New("Array of origin or destination must contains exactly two strings"), utils.INVALID_REQUEST)
+	}
+
+	if !ValidateLatLong(dtoDeliveryRequest.Origin) {
+		return resps, utils.ErrInvalidRequest(errors.New("Invalid Origin longitude latitude"), utils.INVALID_REQUEST)
+	}
+
+	if !ValidateLatLong(dtoDeliveryRequest.Destination) {
+		return resps, utils.ErrInvalidRequest(errors.New("Invalid Destination longitude latitude"), utils.INVALID_REQUEST)
 	}
 
 	r := &maps.DistanceMatrixRequest{
