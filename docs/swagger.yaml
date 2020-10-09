@@ -1,0 +1,143 @@
+basePath: /v1
+definitions:
+  dto.DeliveryRequest:
+    properties:
+      destination:
+        items:
+          type: string
+        type: array
+      origin:
+        items:
+          type: string
+        type: array
+    required:
+    - destination
+    - origin
+    type: object
+  dto.DeliveryResponse:
+    properties:
+      distance:
+        type: integer
+      id:
+        type: integer
+      status:
+        type: string
+    type: object
+  dto.TakeOrder:
+    properties:
+      status:
+        type: string
+    type: object
+  utils.ErrResponse:
+    properties:
+      error:
+        description: application-level error message, for debugging
+        type: string
+      message:
+        description: user-level status message
+        items:
+          type: string
+        type: array
+    type: object
+info:
+  contact:
+    email: andrey.derma@gmail.com
+    name: API Support
+    url: https://www.andrey.com
+  description: Delivery service API
+  license: {}
+  termsOfService: https://www.andrey.com
+  title: Delivery service
+  version: "1.0"
+paths:
+  /delivery_svc/orders:
+    get:
+      consumes:
+      - application/json
+      description: List of orders
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: string
+      - description: limit
+        in: query
+        name: limit
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.DeliveryResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: List of orders
+      tags:
+      - delivery
+    post:
+      consumes:
+      - application/json
+      description: Create an order
+      parameters:
+      - description: DeliveryRequest
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.DeliveryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.DeliveryResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Create an order
+      tags:
+      - delivery
+  /delivery_svc/orders/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Take an order
+      parameters:
+      - description: TakeOrder
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TakeOrder'
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.TakeOrder'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.ErrResponse'
+      summary: Take an order
+      tags:
+      - delivery
+swagger: "2.0"
